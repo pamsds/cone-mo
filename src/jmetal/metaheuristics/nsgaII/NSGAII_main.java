@@ -85,7 +85,8 @@ public class NSGAII_main {
     //fileHandler_ = new FileHandler("NSGAII_main.log"); 
     //logger_.addHandler(fileHandler_) ;
             
-    problem = new ReleasePlanningProblem("instance_50");
+    //problem = new ReleasePlanningProblem("instance_bagnall2001_example");
+    problem = new ReleasePlanningProblem();
     
     algorithm = new NSGAII(problem);
     //algorithm = new ssNSGAII(problem);
@@ -94,16 +95,16 @@ public class NSGAII_main {
     algorithm.setInputParameter("populationSize",100);
     algorithm.setInputParameter("maxEvaluations",25000);
 
-    // Mutation and Crossover for Real codification 
+    // Mutation and Crossover for Integer codification 
     parameters = new HashMap() ;
     parameters.put("probability", 0.9) ;
     parameters.put("distributionIndex", 20.0) ;
-    crossover = CrossoverFactory.getCrossoverOperator("SBXCrossover", parameters);                   
+    crossover = CrossoverFactory.getCrossoverOperator("SinglePointCrossover", parameters);                   
 
     parameters = new HashMap() ;
     parameters.put("probability", 1.0/problem.getNumberOfVariables()) ;
     parameters.put("distributionIndex", 20.0) ;
-    mutation = MutationFactory.getMutationOperator("PolynomialMutation", parameters);                    
+    mutation = MutationFactory.getMutationOperator("BitFlipMutation", parameters);                    
 
     // Selection Operator 
     parameters = null ;
@@ -120,10 +121,10 @@ public class NSGAII_main {
     long estimatedTime = System.currentTimeMillis() - initTime;
     
     // Result messages 
-    logger_.info("Total execution time: "+estimatedTime + "ms");
-    logger_.info("Variables values have been writen to file VAR");
+    //logger_.info("Total execution time: "+estimatedTime + "ms");
+    //logger_.info("Variables values have been writen to file VAR");
     population.printVariablesToFile("VAR_NSGA.txt");    
-    logger_.info("Objectives values have been writen to file FUN");
+    //logger_.info("Objectives values have been writen to file FUN");
     population.printObjectivesToFile("FUN_SGA.txt");
   
   } //main

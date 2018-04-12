@@ -1,0 +1,22 @@
+# [Número de requisitos] [Número de Cliente] [Número de Releases]
+10 4 5
+# [Vetor de Custo de implementação de cada requisito]
+66.00 76.00 11.00 63.00 65.00 81.00 19.00 52.00 42.00 60.00
+# [Vetor de Peso dos clientes]
+9 3 5 7
+# [Vetor de Satisfação]
+8 9 9 9
+8 9 9 9
+8 9 9 1
+8 9 9 9
+6 5 3 1
+3 3 5 5
+3 3 1 5
+7 5 9 9
+8 9 9 9
+6 8 1 5
+# [Vetor de risco dos requisitos]
+4 1 8 5 4 9 7 1 7 1
+
+
+
