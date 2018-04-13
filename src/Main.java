@@ -9,10 +9,11 @@ public class Main {
 		// TODO Auto-generated method stub
 		
 		NSGAII_main teste = new NSGAII_main();
+		String file = "/home/pamella/eclipse-workspace/cone-mo/src/instances/instance_bagnall2001_example.txt";
 		
 		
 		try {
-			teste.main(null);
+			teste.main(file);
 		} catch (SecurityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -65,7 +65,7 @@ public class NSGAII_main {
    *      - jmetal.metaheuristics.nsgaII.NSGAII_main problemName
    *      - jmetal.metaheuristics.nsgaII.NSGAII_main problemName paretoFrontFile
    */
-  public static void main(String [] args) throws 
+  public static void main(String filename) throws 
                                   JMException, 
                                   SecurityException, 
                                   IOException, 
@@ -86,14 +86,14 @@ public class NSGAII_main {
     //logger_.addHandler(fileHandler_) ;
             
     //problem = new ReleasePlanningProblem("instance_bagnall2001_example");
-    problem = new ReleasePlanningProblem();
+    problem = new ReleasePlanningProblem(filename);
     
     algorithm = new NSGAII(problem);
     //algorithm = new ssNSGAII(problem);
 
     // Algorithm parameters
     algorithm.setInputParameter("populationSize",100);
-    algorithm.setInputParameter("maxEvaluations",25000);
+    algorithm.setInputParameter("maxEvaluations",100000);
 
     // Mutation and Crossover for Integer codification 
     parameters = new HashMap() ;

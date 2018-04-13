@@ -45,10 +45,10 @@ public class ReleasePlanningProblem extends Problem {
 	protected int[][] precedence;
 
 	//public ReleasePlanningProblem(String filename) throws IOException {
-	public ReleasePlanningProblem() throws IOException {
+	public ReleasePlanningProblem(String filename) throws IOException {
 
 		//readInstance("src" + File.separator + "instances" + File.separator + filename + ".txt");
-		readInstance("/home/pamella/eclipse-workspace/cone-mo/src/instances/instance_bagnall2001_example.txt");
+		readInstance(filename);
 		problemName_ = "ReleasePlanningProblem";
 		numberOfVariables_ = n_requirements;
 		numberOfObjectives_ = 2; // in fact the problem has a mono-objective
@@ -86,7 +86,6 @@ public class ReleasePlanningProblem extends Problem {
 			n_customers = Integer.parseInt(tokens.nextToken().trim());
 			n_releases = Integer.parseInt(tokens.nextToken().trim());
 			caracter = scn.nextLine();
-
 			
 			while(caracter.contains("#")) {
 				caracter = scn.nextLine();
@@ -126,7 +125,6 @@ public class ReleasePlanningProblem extends Problem {
 				caracter = scn.nextLine();
 			}
 			
-			
 			while(caracter.contains("#")) {
 				caracter = scn.nextLine();
 			}
@@ -140,7 +138,21 @@ public class ReleasePlanningProblem extends Problem {
 			
 			while(caracter.contains("#")) {
 				caracter = scn.nextLine();
-			}			
+			}	
+			
+			precedence = new int[n_requirements][n_requirements];
+			for(int i = 0; i < n_requirements; i++) {
+				tokens = new StringTokenizer(caracter);
+				for(int j = 0; j < n_requirements; j++) {
+					precedence[i][j] = Integer.parseInt(tokens.nextToken().trim());
+				}
+				caracter = scn.nextLine();
+			}
+			
+			while(caracter.contains("#")) {
+				caracter = scn.nextLine();
+			}
+			
 			
 		}catch(FileNotFoundException e) {
 			e.printStackTrace();
