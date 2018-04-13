@@ -114,16 +114,18 @@ public class ReleasePlanningProblem extends Problem {
 				caracter = scn.nextLine();
 			}
 			
+			
 			satisfaction = new int[n_requirements];
 			customerSatisfaction = new int[n_requirements][n_customers];
 			for(int i = 0; i < n_requirements; i++) {
 				tokens = new StringTokenizer(caracter);
 				for(int j = 0; j < n_customers; j++) {
 					customerSatisfaction[i][j] = Integer.parseInt(tokens.nextToken().trim());
-					satisfaction[i] += customerSatisfaction[i][j]*customerImportance[i];
+					satisfaction[i] += customerSatisfaction[i][j]*customerImportance[j];
 				}
 				caracter = scn.nextLine();
 			}
+			
 			
 			while(caracter.contains("#")) {
 				caracter = scn.nextLine();
