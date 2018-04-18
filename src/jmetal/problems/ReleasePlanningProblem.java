@@ -153,6 +153,16 @@ public class ReleasePlanningProblem extends Problem {
 				caracter = scn.nextLine();
 			}
 			
+			releaseCost = new double[n_releases];
+			tokens = new StringTokenizer(caracter);
+			for(int i = 0; i < n_customers; i++) {
+				releaseCost[i] = Double.parseDouble(tokens.nextToken().trim());
+			}
+			caracter = scn.nextLine();
+			
+			while(caracter.contains("#")) {
+				caracter = scn.nextLine();
+			}
 			
 		}catch(FileNotFoundException e) {
 			e.printStackTrace();
