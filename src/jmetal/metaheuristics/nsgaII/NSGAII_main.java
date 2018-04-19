@@ -125,7 +125,7 @@ public class NSGAII_main {
     //logger_.info("Variables values have been writen to file VAR");
     population.printVariablesToFile("VAR_NSGA.txt");    
     //logger_.info("Objectives values have been writen to file FUN");
-    population.printObjectivesToFile("FUN_SGA.txt");
+    population.printObjectivesToFile("FUN_NSGA.txt");
   
   } //main
 } // NSGAII_main
