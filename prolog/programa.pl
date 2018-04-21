@@ -1,3 +1,37 @@
+
+ % validar_regiao(4,1,1,1,2,2,5,5).
+
+validar_regiao(F1,F2,F1estrela,F2estrela,F1min,F2min,F1max,F2max):-
+	inicializar_validacao(F1estrela,F2estrela,F1min,F2min,F1max,F2max,[A1,A2,Teta1,Teta2]),
+	avaliar_ponto(F1,F2,[A1,A2,Teta1,Teta2]).
+
+
+inicializar_validacao(F1estrela,F2estrela,F1min,F2min,F1max,F2max,[A1,A2,Teta1,Teta2]):-
+	A1 is (F2min-F2estrela)/(F1max-F1estrela),write('A1 ==> '),write(A1),nl,
+	A2 is (F2max-F2estrela)/(F1min-F1estrela),write('A2 ==> '),write(A2),nl,
+	B is F2estrela,write('B ==> '),write(B),nl,
+	C is F1estrela,write('C ==> '),write(C),nl,
+	Teta1 is B - A1*C,write('Teta1 ==> '),write(Teta1),nl,
+	Teta2 is B - A2*C,write('Teta2 ==> '),write(Teta2),nl.	
+	
+	
+avaliar_ponto(F1,F2,[A1,A2,Teta1,Teta2]):-
+	W11 is -A1,
+	W12 is 1,
+	W21 is -A2,
+	W22 is 1,
+	neuronio([F1,F2],[W11,W12],Teta1,YTico),write('YTico ==> '),write(YTico),nl,
+	neuronio([F1,F2],[W21,W22],Teta2,YTeco),write('YTeco ==> '),write(YTeco),nl,
+	regiao_interesse_validacao(F1,F2,YTico,YTeco).
+
+
+regiao_interesse_validacao(F1,F2,1,0):-
+	!,assertz(saidaT(F1,F2,1,0,regiaoCONE)).
+
+
+
+/*****************************************/
+
  % gerar_regioes(-3,4,1,1,1,2,2,5,5).
 
 gerar_regioes(Xmin,Xmax,Intervalo,F1estrela,F2estrela,F1min,F2min,F1max,F2max):-
@@ -24,8 +58,6 @@ regioes(Xmax,Intervalo,[A1,A2,Teta1,Teta2]):-
 	  testar(Xmax),!.
 
 /*****************************************/
-% gerar(-3,0.1).
-
 gerar(_):-
 	retract(primeira),!.
 gerar(Intervalo):-
@@ -34,8 +66,6 @@ gerar(Intervalo):-
 	asserta(x(X)).
 
 /*****************************************/
-% avaliar(1,1,2,2,5,5).
-
 avaliar([A1,A2,Teta1,Teta2]):-
 	x(X),
 	F1 is X*X + 1,
@@ -62,8 +92,6 @@ resultados:-
 	retract(x(_)).
 
 /*****************************************/
-% neuronio([1,1],[-1,-1],-1,Y).
-
 neuronio(F,W,Teta,Y):-
 	escalar(F,W,V),
 	g(V,Teta,Y).
@@ -73,8 +101,6 @@ g(V,Teta,1):-
 g(_,_,0).
 
 /*****************************************/
-
-
 regiao_interesse(X,F1,F2,0,0):-
 	!,assertz(saida(X,F1,F2,0,0,regiao1)).
 regiao_interesse(X,F1,F2,1,0):-

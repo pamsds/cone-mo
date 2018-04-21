@@ -16,7 +16,7 @@ public class testprolog {
 		try {
 			Prolog engine = new Prolog();
 			engine.setTheory(new Theory(new FileInputStream("prolog/programa.pl")));
-			SolveInfo info = engine.solve("gerar_regioes(-3,4,1,1,1,2,2,5,5).");
+			SolveInfo info = engine.solve("validar_regiao(1,1,1,1,2,2,5,5).");
 			System.out.println(info.toString());
 			
 			
