@@ -30,6 +30,7 @@ import jmetal.operators.mutation.MutationFactory;
 import jmetal.operators.selection.SelectionFactory;
 import jmetal.problems.ProblemFactory;
 import jmetal.problems.ReleasePlanningProblem;
+import jmetal.problems.gustavoProblem;
 import jmetal.problems.ZDT.ZDT3;
 import jmetal.qualityIndicator.QualityIndicator;
 import jmetal.util.Configuration;
@@ -86,14 +87,15 @@ public class NSGAII_main {
     //logger_.addHandler(fileHandler_) ;
             
     //problem = new ReleasePlanningProblem("instance_bagnall2001_example");
-    problem = new ReleasePlanningProblem(filename);
+    //problem = new ReleasePlanningProblem(filename);
+    problem = new gustavoProblem(10);
     
     algorithm = new NSGAII(problem);
     //algorithm = new ssNSGAII(problem);
 
     // Algorithm parameters
     algorithm.setInputParameter("populationSize",100);
-    algorithm.setInputParameter("maxEvaluations",100000);
+    algorithm.setInputParameter("maxEvaluations",250);
 
     // Mutation and Crossover for Integer codification 
     parameters = new HashMap() ;
@@ -102,7 +104,7 @@ public class NSGAII_main {
     crossover = CrossoverFactory.getCrossoverOperator("SinglePointCrossover", parameters);                   
 
     parameters = new HashMap() ;
-    parameters.put("probability", 1.0/problem.getNumberOfVariables()) ;
+    parameters.put("probability", 0.05) ;
     parameters.put("distributionIndex", 20.0) ;
     mutation = MutationFactory.getMutationOperator("BitFlipMutation", parameters);                    
 

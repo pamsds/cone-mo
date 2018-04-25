@@ -10,7 +10,8 @@ public class Main {
 		
 		NSGAII_main teste = new NSGAII_main();
 		//String file = "/home/pamella/eclipse-workspace/cone-mo/src/instances/instance_bagnall2001_example.txt";
-		String file = "C:\\Users\\Raphael\\eclipse-workspace\\cone-mo\\src\\instances\\instance_bagnall2001_example.txt";
+		String file = "/home/raphael/eclipse-workspace/cone-mo/src/instances/instance_bagnall2001_example.txt";
+		//String file = "C:\\Users\\Raphael\\eclipse-workspace\\cone-mo\\src\\instances\\instance_bagnall2001_example.txt";
 		
 		
 		try {
