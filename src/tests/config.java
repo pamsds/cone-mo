@@ -6,14 +6,13 @@ import jmetal.qualityIndicator.util.MetricsUtil;
 
 public class config {
 
-	public static int point1[] = { 2, 2 };
-	public static int point2[] = { 5, 5 };
-	public static int festrela[] = { -Integer.MAX_VALUE, -Integer.MAX_VALUE };
-	public static double[] PreferencesP1 = {0.1,0.9};
-	public static double[] PreferencesP2 = {0.9,0.1};
-	
-	
-	private Solution referencePoint(SolutionSet population, double[] solutionPreferences) {
+	public static double point1[] = { 0, 0 };
+	public static double point2[] = { 0, 0 };
+	public static int festrela[] = { Integer.MAX_VALUE, Integer.MAX_VALUE };
+	public static double[] PreferencesP1 = { 0.9, 0.1 };
+	public static double[] PreferencesP2 = { 0.5, 0.5 };
+
+	public static Solution referencePoint(SolutionSet population, double[] solutionPreferences) {
 
 		MetricsUtil utils_ = new jmetal.qualityIndicator.util.MetricsUtil();
 		double[] maximumValues = utils_.getMaximumValues(population.writeObjectivesToMatrix(), 2);
@@ -36,7 +35,7 @@ public class config {
 
 	}
 
-	private double[] calcMi(double[] solutionPreferences, double maximumValues[], double minimumValues[], int tam) {
+	private static double[] calcMi(double[] solutionPreferences, double maximumValues[], double minimumValues[], int tam) {
 
 		double mi[] = new double[tam];
 
@@ -48,7 +47,7 @@ public class config {
 
 	}
 
-	private double[] calcProblem(double mi[], double maximumValues[], double minimumValues[], SolutionSet population) {
+	private static double[] calcProblem(double mi[], double maximumValues[], double minimumValues[], SolutionSet population) {
 
 		double valueFuntion[] = new double[population.size()];
 

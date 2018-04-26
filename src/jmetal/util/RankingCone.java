@@ -40,7 +40,7 @@ import java.util.List;
  * solutions, subset 1 contains the non-dominated solutions after removing those
  * belonging to subset 0, and so on.
  */
-public class Ranking {
+public class RankingCone {
   
   /**
    * The <code>SolutionSet</code> to rank
@@ -55,7 +55,7 @@ public class Ranking {
   /**
    * stores a <code>Comparator</code> for dominance checking
    */
-  private static final Comparator dominance_ = new DominanceComparator();
+  private static final Comparator dominance_ = new coneComparator();
   
   /**
    * stores a <code>Comparator</code> for Overal Constraint Violation Comparator
@@ -67,7 +67,7 @@ public class Ranking {
    * Constructor.
    * @param solutionSet The <code>SolutionSet</code> to be ranked.
    */       
-  public Ranking(SolutionSet solutionSet) {        
+  public RankingCone(SolutionSet solutionSet) {        
     solutionSet_ = solutionSet ;
 
     // dominateMe[i] contains the number of solutions dominating i        

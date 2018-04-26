@@ -86,9 +86,9 @@ public class NSGAII_main {
     //fileHandler_ = new FileHandler("NSGAII_main.log"); 
     //logger_.addHandler(fileHandler_) ;
             
-    //problem = new ReleasePlanningProblem("instance_bagnall2001_example");
+    problem = new ReleasePlanningProblem("instance_bagnall2001_example");
     //problem = new ReleasePlanningProblem(filename);
-    problem = new gustavoProblem(10);
+    //problem = new gustavoProblem(10);
     
     algorithm = new NSGAII(problem);
     //algorithm = new ssNSGAII(problem);
