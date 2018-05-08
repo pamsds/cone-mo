@@ -21,6 +21,14 @@
 
 package jmetal.metaheuristics.nsgaII;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+
+import alice.tuprolog.InvalidTheoryException;
+import alice.tuprolog.MalformedGoalException;
+import alice.tuprolog.Prolog;
+import alice.tuprolog.SolveInfo;
+import alice.tuprolog.Theory;
 import jmetal.core.*;
 import jmetal.qualityIndicator.QualityIndicator;
 import jmetal.util.Distance;
@@ -28,33 +36,39 @@ import jmetal.util.JMException;
 import jmetal.util.Ranking;
 import jmetal.util.RankingCone;
 import jmetal.util.comparators.CrowdingComparator;
+import tests.config;
 
-/** 
- *  Implementation of NSGA-II.
- *  This implementation of NSGA-II makes use of a QualityIndicator object
- *  to obtained the convergence speed of the algorithm. This version is used
- *  in the paper:
- *     A.J. Nebro, J.J. Durillo, C.A. Coello Coello, F. Luna, E. Alba 
- *     "A Study of Convergence Speed in Multi-Objective Metaheuristics." 
- *     To be presented in: PPSN'08. Dortmund. September 2008.
+/**
+ * Implementation of NSGA-II. This implementation of NSGA-II makes use of a
+ * QualityIndicator object to obtained the convergence speed of the algorithm.
+ * This version is used in the paper: A.J. Nebro, J.J. Durillo, C.A. Coello
+ * Coello, F. Luna, E. Alba "A Study of Convergence Speed in Multi-Objective
+ * Metaheuristics." To be presented in: PPSN'08. Dortmund. September 2008.
  */
 
-public class IPNSGAII2 extends Algorithm {
-  /**
-   * Constructor
-   * @param problem Problem to solve
-   */
-  public IPNSGAII2(Problem problem) {
-    super (problem) ;
-  } // NSGAII
+public class IPNSGAII extends Algorithm {
 
-  /**   
+	Prolog engine;
+    SolveInfo info = null;
+
+	/**
+	 * Constructor
+	 * 
+	 * @param problem
+	 *            Problem to solve
+	 */
+	public IPNSGAII(Problem problem) {
+		super(problem);
+	} // NSGAII
+
+	/**   
    * Runs the NSGA-II algorithm.
    * @return a <code>SolutionSet</code> that is a set of non dominated solutions
    * as a result of the algorithm execution
    * @throws JMException 
    */
   public SolutionSet execute() throws JMException, ClassNotFoundException {
+	
     int populationSize;
     int maxEvaluations;
     int evaluations;
@@ -72,6 +86,14 @@ public class IPNSGAII2 extends Algorithm {
     Operator selectionOperator;
 
     Distance distance = new Distance();
+    
+    
+	engine = new Prolog();
+	try {
+		engine.setTheory(new Theory(new FileInputStream("prolog/programa.pl")));
+	} catch (InvalidTheoryException | IOException e) {
+		e.printStackTrace();
+	}
 
     //Read the parameters
     populationSize = ((Integer) getInputParameter("populationSize")).intValue();
@@ -91,13 +113,39 @@ public class IPNSGAII2 extends Algorithm {
 
     // Create the initial solutionSet
     Solution newSolution;
-    for (int i = 0; i < populationSize; i++) {
+    
+    while (evaluations < populationSize) {
       newSolution = new Solution(problem_);
       problem_.evaluate(newSolution);
       problem_.evaluateConstraints(newSolution);
+	try {
+		System.out.println(montarString(newSolution));
+		info = engine.solve(montarString(newSolution));
+	} catch (MalformedGoalException e) {
+		e.printStackTrace();
+	}
+	System.out.println(info.toString());
+      if (info.toString().equals("yes.")) {
+      System.out.println("geracao populcao"+evaluations);
       evaluations++;
       population.add(newSolution);
-    } //for       
+      }
+    } //for    
+    
+    //copy 
+//    for (int i = 0; i < populationSize; i++) {
+//    	if (i < config.teste.size()) {
+//            population.add(config.teste.get(i));
+//  	        evaluations++;
+//		}else {
+//		  newSolution = new Solution(problem_);
+//	      problem_.evaluate(newSolution);
+//	      problem_.evaluateConstraints(newSolution);			
+//	      evaluations++;
+//	      population.add(newSolution);			
+//		}
+//
+//	}
 
     // Generations 
     while (evaluations < maxEvaluations) {
@@ -129,7 +177,7 @@ public class IPNSGAII2 extends Algorithm {
       union = ((SolutionSet) population).union(offspringPopulation);
 
       // Ranking the union
-      Ranking ranking = new Ranking(union);
+      RankingCone ranking = new RankingCone(union);
 
       int remain = populationSize;
       int index = 0;
@@ -190,4 +238,13 @@ public class IPNSGAII2 extends Algorithm {
 
     return ranking.getSubfront(0);
   } // execute
+
+	String montarString(Solution solution) {
+		String s;
+		return s = "validar_regiao(" + (int) solution.getObjective(0) + "," + (int) solution.getObjective(1) + ","
+				+ config.festrela[0] + "," + config.festrela[1] + "," + config.point1[0] + "," + config.point1[1] + ","
+				+ config.point2[0] + "," + config.point2[1] + ").";
+
+	}
+
 } // NSGA-II

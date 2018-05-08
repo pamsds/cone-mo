@@ -27,7 +27,8 @@ avaliar_ponto(F1,F2,[A1,A2,Teta1,Teta2]):-
 
 regiao_interesse_validacao(F1,F2,1,0):-
 	!,assertz(saidaT(F1,F2,1,0,regiaoCONE)).
-
+regiao_interesse_validacao(F1,F2,0,1):-
+	!,assertz(saidaT(F1,F2,0,1,regiaoCONE)).
 
 
 /*****************************************/

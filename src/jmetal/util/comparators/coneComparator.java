@@ -17,13 +17,14 @@ import tests.config;
 public class coneComparator implements Comparator {
 	IConstraintViolationComparator violationConstraintComparator_;
 	Prolog engine;
+	SolveInfo info1 = null;
+	SolveInfo info2 = null;
 
 	/**
 	 * Constructor
 	 */
 	public coneComparator() {
 		violationConstraintComparator_ = new OverallConstraintViolationComparator();
-
 		engine = new Prolog();
 		try {
 			engine.setTheory(new Theory(new FileInputStream("prolog/programa.pl")));
@@ -61,55 +62,54 @@ public class coneComparator implements Comparator {
 		Solution solution1 = (Solution) object1;
 		Solution solution2 = (Solution) object2;
 
-		int dominate1; // dominate1 indicates if some objective of solution1
-						// dominates the same objective in solution2. dominate2
-		int dominate2; // is the complementary of dominate1.
-
-		dominate1 = 0;
-		dominate2 = 0;
-
-		int flag; // stores the result of the comparison
-
-		// Test to determine whether at least a solution violates some constraint
-		if (violationConstraintComparator_.needToCompare(solution1, solution2))
-			return violationConstraintComparator_.compare(solution1, solution2);
-
-		// Applying a dominance Test then
-		double value1, value2;
-		for (int i = 0; i < solution1.getNumberOfObjectives(); i++) {
-			value1 = solution1.getObjective(i);
-			value2 = solution2.getObjective(i);
-			if (value1 < value2) {
-				flag = -1;
-			} else if (value1 > value2) {
-				flag = 1;
-			} else {
-				flag = 0;
-			}
-
-			if (flag == -1) {
-				dominate1 = 1;
-			}
-
-			if (flag == 1) {
-				dominate2 = 1;
-			}
-		}
-
-		SolveInfo info1 = null;
-		SolveInfo info2 = null;
-
 		try {
 			info1 = engine.solve(montarString(solution1));
 			info2 = engine.solve(montarString(solution2));
-			System.out.println(info1+" "+ montarString(solution1));
-			System.out.println(info2+" "+ montarString(solution2));
-			System.out.println();
+			
+			System.out.println(montarString(solution2));	
+			if (info1.toString().equals("yes.")) {
+				System.out.println(info1.toString());	
+			}
+
+			
 		} catch (MalformedGoalException e) {
 			e.printStackTrace();
 		}
+		
 
 		if (info1.toString().equals(info2.toString())) {
+
+			int dominate1; // dominate1 indicates if some objective of solution1
+			// dominates the same objective in solution2. dominate2
+			int dominate2; // is the complementary of dominate1.
+
+			dominate1 = 0;
+			dominate2 = 0;
+
+			int flag; // stores the result of the comparison
+
+			// Applying a dominance Test then
+			double value1, value2;
+			for (int i = 0; i < solution1.getNumberOfObjectives(); i++) {
+				value1 = solution1.getObjective(i);
+				value2 = solution2.getObjective(i);
+				if (value1 < value2) {
+					flag = -1;
+				} else if (value1 > value2) {
+					flag = 1;
+				} else {
+					flag = 0;
+				}
+
+				if (flag == -1) {
+					dominate1 = 1;
+				}
+
+				if (flag == 1) {
+					dominate2 = 1;
+				}
+			}
+
 			if (dominate1 == dominate2) {
 				return 0; // No one dominate the other
 			}
@@ -133,8 +133,8 @@ public class coneComparator implements Comparator {
 	String montarString(Solution solution) {
 		String s;
 		return s = "validar_regiao(" + (int) solution.getObjective(0) + "," + (int) solution.getObjective(1) + ","
-				+ config.festrela[0] + "," + config.festrela[1] + "," + config.point1[0] + "," + config.point1[1] + "," + config.point2[0] + ","
-				+ config.point2[1] + ").";
+				+ config.festrela[0] + "," + config.festrela[1] + "," + config.point1[0] + "," + config.point2[0] + ","
+				+ config.point1[1] + "," + config.point2[1] + ").";
 
 	}
 

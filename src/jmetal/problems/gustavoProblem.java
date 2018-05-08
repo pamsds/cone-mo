@@ -44,17 +44,17 @@ public class gustavoProblem extends Problem{
 				counterOnes++;
 		}
 	    
-	    solution.setObjective(0, -func1(counterOnes));
+	    solution.setObjective(0, func1(counterOnes));
 	    solution.setObjective(1, -func2(counterOnes));
 		
 	}
 
-	private double func2(int X) {
-		return X*X + 1;
-	}
-
 	private double func1(int X) {
 		return (X-1)*(X-1) + 1;
+	}
+	
+	private double func2(int X) {
+		return X*X + 1;
 	}
 
 }
