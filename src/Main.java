@@ -35,12 +35,21 @@ public class Main {
 	    population.printObjectivesToFile("FUN_NSGA.txt");
 		
 		Solution solution = config.referencePoint(population, config.PreferencesP1);
-		config.point1[0] = solution.getObjective(0);
-		config.point1[1] = solution.getObjective(1);
+		Solution solution2 = config.referencePoint(population, config.PreferencesP2);
 
-		solution = config.referencePoint(population, config.PreferencesP2);
-		config.point2[0] = solution.getObjective(0);
-		config.point2[1] = solution.getObjective(1);
+				
+		if(solution.getObjective(0)<solution2.getObjective(0)) {
+			config.point1[0] = solution.getObjective(0);
+			config.point1[1] = solution.getObjective(1);
+			config.point2[0] = solution2.getObjective(0);
+			config.point2[1] = solution2.getObjective(1);	
+			
+		}else {
+			config.point2[0] = solution.getObjective(0);
+			config.point2[1] = solution.getObjective(1);
+			config.point1[0] = solution2.getObjective(0);
+			config.point1[1] = solution2.getObjective(1);
+		}
 		
 		population = nsgaCone(problem);
 		
@@ -61,7 +70,7 @@ public class Main {
 
 		// Algorithm parameters
 		algorithm.setInputParameter("populationSize", 100);
-		algorithm.setInputParameter("maxEvaluations", 50000);
+		algorithm.setInputParameter("maxEvaluations", 250);
 
 		// Mutation and Crossover for Integer codification
 		parameters = new HashMap();
@@ -104,7 +113,7 @@ public class Main {
 
 		// Algorithm parameters
 		algorithm.setInputParameter("populationSize", 100);
-		algorithm.setInputParameter("maxEvaluations", 2500);
+		algorithm.setInputParameter("maxEvaluations", 250);
 
 		// Mutation and Crossover for Integer codification
 		parameters = new HashMap();

@@ -8,9 +8,9 @@ public class config {
 
 	public static double point1[] = { 0, 0 };
 	public static double point2[] = { 0, 0 };
-	public static int festrela[] = { 82, -2 };
-	public static double[] PreferencesP1 = { 1.0, 0.0 };
-	public static double[] PreferencesP2 = { 0.0, 0.1 };
+	public static int festrela[] = { 100, 0 };
+	public static double[] PreferencesP1 = { 0.9, 0.1 };
+	public static double[] PreferencesP2 = { 0.2, 0.8 };
 
 	public static Solution referencePoint(SolutionSet population, double[] solutionPreferences) {
 

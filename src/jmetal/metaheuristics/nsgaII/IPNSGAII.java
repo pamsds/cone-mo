@@ -241,9 +241,9 @@ public class IPNSGAII extends Algorithm {
 
 	String montarString(Solution solution) {
 		String s;
-		return s = "validar_regiao(" + (int) solution.getObjective(0) + "," + (int) solution.getObjective(1) + ","
-				+ config.festrela[0] + "," + config.festrela[1] + "," + config.point1[0] + "," + config.point1[1] + ","
-				+ config.point2[0] + "," + config.point2[1] + ").";
+		return s = "validar_regiao(" + (int) solution.getObjective(0) + "," + (int) -solution.getObjective(1) + ","
+				+ config.festrela[0] + "," + config.festrela[1] + "," + config.point1[0] + "," + config.point2[0] + ","
+				+ config.point1[1] + "," + config.point2[1] + ").";
 
 	}
 
