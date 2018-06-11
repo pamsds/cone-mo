@@ -24,7 +24,6 @@ package jmetal.util;
 import jmetal.core.SolutionSet;
 import jmetal.util.comparators.DominanceComparator;
 import jmetal.util.comparators.OverallConstraintViolationComparator;
-import jmetal.util.comparators.coneComparator;
 
 import java.util.Comparator;
 import java.util.Iterator;
@@ -86,11 +85,38 @@ public class Ranking {
     for (int i = 0; i < front.length; i++)
       front[i] = new LinkedList<Integer>();
         
+    /*
+    //-> Fast non dominated sorting algorithm
+    for (int p = 0; p < solutionSet_.size(); p++) {
+    // Initialice the list of individuals that i dominate and the number
+    // of individuals that dominate me
+      iDominate[p] = new LinkedList<Integer>();
+      dominateMe[p] = 0;            
+      // For all q individuals , calculate if p dominates q or vice versa
+      for (int q = 0; q < solutionSet_.size(); q++) {
+        flagDominate =constraint_.compare(solutionSet.get(p),solutionSet.get(q));
+        if (flagDominate == 0) {
+          flagDominate =dominance_.compare(solutionSet.get(p),solutionSet.get(q));                                
+        }
+        
+        if (flagDominate == -1) {
+          iDominate[p].add(new Integer(q));
+        } else if (flagDominate == 1) {
+                    dominateMe[p]++;   
+        }
+      }
+            
+      // If nobody dominates p, p belongs to the first front
+      if (dominateMe[p] == 0) {
+        front[0].add(new Integer(p));
+        solutionSet.get(p).setRank(0);
+      }            
+    }
+    */
     
     //-> Fast non dominated sorting algorithm
     // Contribution of Guillaume Jacquenot
     for (int p = 0; p < solutionSet_.size(); p++) {
-    	
     // Initialize the list of individuals that i dominate and the number
     // of individuals that dominate me
       iDominate[p] = new LinkedList<Integer>();

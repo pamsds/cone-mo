@@ -223,8 +223,8 @@ public class ReleasePlanningProblem extends Problem {
 		solutionSatisfaction = calculateSatisfaction(solution);
 		solutionRisk = calculateRisk(solution);
 		
-		solution.setObjective(0, -solutionSatisfaction);
-		solution.setObjective(1, solutionRisk);
+		solution.setObjective(0, solutionRisk);
+		solution.setObjective(1, -solutionSatisfaction);
 
 //		if (evaluatePrecedences(solution) == 0) {
 //			solution.setObjective(0, -solutionSatisfaction);

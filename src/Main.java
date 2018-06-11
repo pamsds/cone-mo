@@ -1,18 +1,24 @@
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 
+import alice.tuprolog.InvalidTheoryException;
+import alice.tuprolog.MalformedGoalException;
+import alice.tuprolog.Prolog;
+import alice.tuprolog.SolveInfo;
+import alice.tuprolog.Theory;
 import jmetal.core.Algorithm;
 import jmetal.core.Operator;
 import jmetal.core.Problem;
 import jmetal.core.Solution;
 import jmetal.core.SolutionSet;
-import jmetal.metaheuristics.nsgaII.IPNSGAII;
 import jmetal.metaheuristics.nsgaII.NSGAII;
-import jmetal.metaheuristics.nsgaII.NSGAII_main;
+import jmetal.metaheuristics.nsgaII.NSGAPC;
 import jmetal.operators.crossover.CrossoverFactory;
 import jmetal.operators.mutation.MutationFactory;
 import jmetal.operators.selection.SelectionFactory;
 import jmetal.problems.ReleasePlanningProblem;
+import jmetal.problems.ReleasePlanningProblemRaphael;
 import jmetal.problems.gustavoProblem;
 import jmetal.qualityIndicator.QualityIndicator;
 import jmetal.util.JMException;
@@ -21,40 +27,46 @@ import tests.config;
 public class Main {
 
 	public static void main(String[] args) throws ClassNotFoundException, IOException, JMException {
-		
-		// String file = "/home/pamella/eclipse-workspace/cone-mo/src/instances/instance_bagnall2001_example.txt";
-		String file = "/home/raphael/eclipse-workspace/cone-mo/src/instances/instance_bagnall2001_example.txt";
-		// String file = "C:\\Users\\Raphael\\eclipse-workspace\\cone-mo\\src\\instances\\instance_bagnall2001_example.txt";
 
-		//Problem problem = new ReleasePlanningProblem(file);
-		Problem problem = new gustavoProblem(10);
-		
+		config();
+		Problem problem = new ReleasePlanningProblemRaphael("data-set-1");
+		// Problem problem = new gustavoProblem(1000);
+
 		SolutionSet population = nsgaStandard(problem);
-		
-	    population.printVariablesToFile("VAR_NSGA.txt");    
-	    population.printObjectivesToFile("FUN_NSGA.txt");
-		
+		population.printObjectivesToFile("NSGA.txt");
+		// population.printVariablesToFile("NSGA.txt");
+
 		Solution solution = config.referencePoint(population, config.PreferencesP1);
 		Solution solution2 = config.referencePoint(population, config.PreferencesP2);
 
-				
-		if(solution.getObjective(0)<solution2.getObjective(0)) {
-			config.point1[0] = solution.getObjective(0);
-			config.point1[1] = solution.getObjective(1);
-			config.point2[0] = solution2.getObjective(0);
-			config.point2[1] = solution2.getObjective(1);	
-			
-		}else {
-			config.point2[0] = solution.getObjective(0);
-			config.point2[1] = solution.getObjective(1);
-			config.point1[0] = solution2.getObjective(0);
-			config.point1[1] = solution2.getObjective(1);
-		}
-		
+		SolutionSet seletedPoints = new SolutionSet(2);
+		seletedPoints.add(solution);
+		seletedPoints.add(solution2);
+		seletedPoints.printObjectivesToFile("points.txt");
+
+		config.min[0] = solution.getObjective(0);
+		config.min[1] = solution2.getObjective(1);
+		config.max[0] = solution2.getObjective(0);
+		config.max[1] = solution.getObjective(1);
+
+		SolutionSet populationSelect = nsgaSelectFront(population);
+		populationSelect.printObjectivesToFile("NSGA_SEL.txt");
+		// populationSelect.printVariablesToFile("VAR_NSGA_SEL.txt");
+
 		population = nsgaCone(problem);
-		
-	    population.printVariablesToFile("VAR_IPNSGA.txt");    
-	    population.printObjectivesToFile("FUN_IPNSGA.txt");
+		population.printObjectivesToFile("NSGAPC.txt");
+		// population.printVariablesToFile("VAR_NSGAPC.txt");
+
+	}
+
+	private static void config() {
+		config.engine = new Prolog();
+		try {
+			config.engine.setTheory(new Theory(new FileInputStream("prolog/programa.pl")));
+		} catch (InvalidTheoryException | IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	public static SolutionSet nsgaStandard(Problem problem) throws IOException, JMException, ClassNotFoundException {
@@ -70,7 +82,7 @@ public class Main {
 
 		// Algorithm parameters
 		algorithm.setInputParameter("populationSize", 100);
-		algorithm.setInputParameter("maxEvaluations", 250);
+		algorithm.setInputParameter("maxEvaluations", 3000);
 
 		// Mutation and Crossover for Integer codification
 		parameters = new HashMap();
@@ -108,12 +120,11 @@ public class Main {
 		HashMap parameters; // Operator parameters
 		QualityIndicator indicators; // Object to get quality indicators
 
-
-		algorithm = new IPNSGAII(problem);
+		algorithm = new NSGAPC(problem);
 
 		// Algorithm parameters
 		algorithm.setInputParameter("populationSize", 100);
-		algorithm.setInputParameter("maxEvaluations", 250);
+		algorithm.setInputParameter("maxEvaluations", 3000);
 
 		// Mutation and Crossover for Integer codification
 		parameters = new HashMap();
@@ -139,6 +150,48 @@ public class Main {
 		SolutionSet population = algorithm.execute();
 
 		return population;
+
+	}
+
+	public static SolutionSet nsgaSelectFront(SolutionSet population) {
+
+		SolutionSet SelPopulation = new SolutionSet(100);
+
+		for (int i = 0; i < population.size(); i++) {
+
+			Solution solution = population.get(i);
+
+			Prolog engine = new Prolog();
+			try {
+				engine.setTheory(new Theory(new FileInputStream("prolog/programa.pl")));
+			} catch (InvalidTheoryException | IOException e) {
+				e.printStackTrace();
+			}
+
+			try {
+				SolveInfo info = engine.solve(montarString(solution));
+				// System.out.println(montarString(solution));
+				// System.out.println(info.toString().equals("yes."));
+
+				if (info.toString().equals("yes.")) {
+					SelPopulation.add(solution);
+				}
+
+			} catch (MalformedGoalException e) {
+				e.printStackTrace();
+			}
+
+		}
+
+		return SelPopulation;
+
+	}
+
+	static String montarString(Solution solution) {
+		String s;
+		return s = "validar_regiao(" + (int) solution.getObjective(0) + "," + (int) solution.getObjective(1) + ","
+				+ config.festrela[0] + "," + config.festrela[1] + "," + config.min[0] + "," + config.min[1] + ","
+				+ config.max[0] + "," + config.max[1] + ").";
 
 	}
 

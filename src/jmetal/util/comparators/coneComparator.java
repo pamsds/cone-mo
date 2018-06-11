@@ -16,7 +16,6 @@ import tests.config;
 
 public class coneComparator implements Comparator {
 	IConstraintViolationComparator violationConstraintComparator_;
-	Prolog engine;
 	SolveInfo info1 = null;
 	SolveInfo info2 = null;
 
@@ -25,12 +24,6 @@ public class coneComparator implements Comparator {
 	 */
 	public coneComparator() {
 		violationConstraintComparator_ = new OverallConstraintViolationComparator();
-		engine = new Prolog();
-		try {
-			engine.setTheory(new Theory(new FileInputStream("prolog/programa.pl")));
-		} catch (InvalidTheoryException | IOException e) {
-			e.printStackTrace();
-		}
 
 	}
 
@@ -63,13 +56,13 @@ public class coneComparator implements Comparator {
 		Solution solution2 = (Solution) object2;
 
 		try {
-			info1 = engine.solve(montarString(solution1));
-			info2 = engine.solve(montarString(solution2));
+			info1 = config.engine.solve(montarString(solution1));
+			info2 = config.engine.solve(montarString(solution2));
 			
-			System.out.println(montarString(solution2));	
-			if (info1.toString().equals("yes.")) {
-				System.out.println(info1.toString());	
-			}
+//			System.out.println(montarString(solution2));	
+//			if (info1.toString().equals("yes.")) {
+//				System.out.println(info1.toString());	
+//			}
 
 			
 		} catch (MalformedGoalException e) {
@@ -130,11 +123,11 @@ public class coneComparator implements Comparator {
 
 	} // compare
 
-	String montarString(Solution solution) {
+	static String montarString(Solution solution) {
 		String s;
-		return s = "validar_regiao(" + (int) solution.getObjective(0) + "," + (int) -solution.getObjective(1) + ","
-				+ config.festrela[0] + "," + config.festrela[1] + "," + config.point1[0] + "," + config.point2[0] + ","
-				+ config.point1[1] + "," + config.point2[1] + ").";
+		return s = "validar_regiao(" + (int) solution.getObjective(0) + "," + (int) solution.getObjective(1) + ","
+				+ config.festrela[0] + "," + config.festrela[1] + "," + config.min[0] + "," + config.min[1] + ","
+				+ config.max[0] + "," + config.max[1] + ").";
 
 	}
 

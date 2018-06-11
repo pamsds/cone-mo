@@ -33,7 +33,6 @@ import jmetal.core.*;
 import jmetal.qualityIndicator.QualityIndicator;
 import jmetal.util.Distance;
 import jmetal.util.JMException;
-import jmetal.util.Ranking;
 import jmetal.util.RankingCone;
 import jmetal.util.comparators.CrowdingComparator;
 import tests.config;
@@ -46,7 +45,7 @@ import tests.config;
  * Metaheuristics." To be presented in: PPSN'08. Dortmund. September 2008.
  */
 
-public class IPNSGAII extends Algorithm {
+public class NSGAPC extends Algorithm {
 
 	Prolog engine;
     SolveInfo info = null;
@@ -57,7 +56,7 @@ public class IPNSGAII extends Algorithm {
 	 * @param problem
 	 *            Problem to solve
 	 */
-	public IPNSGAII(Problem problem) {
+	public NSGAPC(Problem problem) {
 		super(problem);
 	} // NSGAII
 
@@ -114,23 +113,23 @@ public class IPNSGAII extends Algorithm {
     // Create the initial solutionSet
     Solution newSolution;
     
-    while (evaluations < populationSize) {
-      newSolution = new Solution(problem_);
-      problem_.evaluate(newSolution);
-      problem_.evaluateConstraints(newSolution);
-	try {
-		System.out.println(montarString(newSolution));
-		info = engine.solve(montarString(newSolution));
-	} catch (MalformedGoalException e) {
-		e.printStackTrace();
-	}
-	System.out.println(info.toString());
-      if (info.toString().equals("yes.")) {
-      System.out.println("geracao populcao"+evaluations);
-      evaluations++;
-      population.add(newSolution);
-      }
-    } //for    
+//    while (evaluations < populationSize) {
+//      newSolution = new Solution(problem_);
+//      problem_.evaluate(newSolution);
+//      problem_.evaluateConstraints(newSolution);
+//	try {
+//		System.out.println(montarString(newSolution));
+//		info = engine.solve(montarString(newSolution));
+//	} catch (MalformedGoalException e) {
+//		e.printStackTrace();
+//	}
+//	System.out.println(info.toString());
+//      if (info.toString().equals("yes.")) {
+//      System.out.println("geracao populcao"+evaluations);
+//      evaluations++;
+//      population.add(newSolution);
+//      }
+//    } //for    
     
     //copy 
 //    for (int i = 0; i < populationSize; i++) {
@@ -147,9 +146,22 @@ public class IPNSGAII extends Algorithm {
 //
 //	}
 
+    // Create the initial solutionSet
+    for (int i = 0; i < populationSize; i++) {
+      newSolution = new Solution(problem_);
+      problem_.evaluate(newSolution);
+      problem_.evaluateConstraints(newSolution);
+      evaluations++;
+      population.add(newSolution);
+    } //for          
+    
+    
+    int count = 0;
+    
     // Generations 
     while (evaluations < maxEvaluations) {
 
+    	count++;
     	System.out.println("evaluation:::"+evaluations);
     	
       // Create the offSpring solutionSet      
@@ -227,6 +239,9 @@ public class IPNSGAII extends Algorithm {
           requiredEvaluations = evaluations;
         } // if
       } // if
+      
+      population.printObjectivesToFile("NSGAPC_G_"+count);
+      
     } // while
 
     // Return as output parameter the required evaluations
@@ -239,11 +254,11 @@ public class IPNSGAII extends Algorithm {
     return ranking.getSubfront(0);
   } // execute
 
-	String montarString(Solution solution) {
+	static String montarString(Solution solution) {
 		String s;
-		return s = "validar_regiao(" + (int) solution.getObjective(0) + "," + (int) -solution.getObjective(1) + ","
-				+ config.festrela[0] + "," + config.festrela[1] + "," + config.point1[0] + "," + config.point2[0] + ","
-				+ config.point1[1] + "," + config.point2[1] + ").";
+		return s = "validar_regiao(" + (int) solution.getObjective(0) + "," + (int) solution.getObjective(1) + ","
+				+ config.festrela[0] + "," + config.festrela[1] + "," + config.min[0] + "," + config.min[1] + ","
+				+ config.max[0] + "," + config.max[1] + ").";
 
 	}
 

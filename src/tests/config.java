@@ -1,17 +1,24 @@
 package tests;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+
+import alice.tuprolog.InvalidTheoryException;
+import alice.tuprolog.Prolog;
+import alice.tuprolog.Theory;
 import jmetal.core.Solution;
 import jmetal.core.SolutionSet;
 import jmetal.qualityIndicator.util.MetricsUtil;
 
 public class config {
 
-	public static double point1[] = { 0, 0 };
-	public static double point2[] = { 0, 0 };
-	public static int festrela[] = { 100, 0 };
-	public static double[] PreferencesP1 = { 0.9, 0.1 };
-	public static double[] PreferencesP2 = { 0.2, 0.8 };
-
+	public static double min[] = { 0, 0 };
+	public static double max[] = { 0, 0 };
+	public static int festrela[] = { 800, 0 };
+	public static double[] PreferencesP1 = { 1.0, 0.0 };
+	public static double[] PreferencesP2 = { 0.7, 0.3 };
+	public static Prolog engine;
+		
 	public static Solution referencePoint(SolutionSet population, double[] solutionPreferences) {
 
 		MetricsUtil utils_ = new jmetal.qualityIndicator.util.MetricsUtil();
