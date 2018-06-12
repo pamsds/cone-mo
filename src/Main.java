@@ -17,9 +17,7 @@ import jmetal.metaheuristics.nsgaII.NSGAPC;
 import jmetal.operators.crossover.CrossoverFactory;
 import jmetal.operators.mutation.MutationFactory;
 import jmetal.operators.selection.SelectionFactory;
-import jmetal.problems.ReleasePlanningProblem;
 import jmetal.problems.ReleasePlanningProblemRaphael;
-import jmetal.problems.gustavoProblem;
 import jmetal.qualityIndicator.QualityIndicator;
 import jmetal.util.JMException;
 import tests.config;
@@ -30,33 +28,32 @@ public class Main {
 
 		config();
 		Problem problem = new ReleasePlanningProblemRaphael("data-set-1");
-		// Problem problem = new gustavoProblem(1000);
 
-		SolutionSet population = nsgaStandard(problem);
-		population.printObjectivesToFile("NSGA.txt");
-		// population.printVariablesToFile("NSGA.txt");
+		SolutionSet population = null;
 
-		Solution solution = config.referencePoint(population, config.PreferencesP1);
-		Solution solution2 = config.referencePoint(population, config.PreferencesP2);
+		for (int i = 0; i < 1; i++) {
+			population = nsgaStandard(problem);
+			population.printObjectivesToFile("NSGA.txt");
 
-		SolutionSet seletedPoints = new SolutionSet(2);
-		seletedPoints.add(solution);
-		seletedPoints.add(solution2);
-		seletedPoints.printObjectivesToFile("points.txt");
+			Solution solution = config.referencePoint(population, config.PreferencesP1);
+			Solution solution2 = config.referencePoint(population, config.PreferencesP2);
 
-		config.min[0] = solution.getObjective(0);
-		config.min[1] = solution2.getObjective(1);
-		config.max[0] = solution2.getObjective(0);
-		config.max[1] = solution.getObjective(1);
+			SolutionSet seletedPoints = new SolutionSet(2);
+			seletedPoints.add(solution);
+			seletedPoints.add(solution2);
+			seletedPoints.printObjectivesToFile("points.txt");
 
-		SolutionSet populationSelect = nsgaSelectFront(population);
-		populationSelect.printObjectivesToFile("NSGA_SEL.txt");
-		// populationSelect.printVariablesToFile("VAR_NSGA_SEL.txt");
+			config.min[0] = solution.getObjective(0);
+			config.min[1] = solution2.getObjective(1);
+			config.max[0] = solution2.getObjective(0);
+			config.max[1] = solution.getObjective(1);
 
-		population = nsgaCone(problem);
-		population.printObjectivesToFile("NSGAPC.txt");
-		// population.printVariablesToFile("VAR_NSGAPC.txt");
+			SolutionSet populationSelect = nsgaSelectFront(population);
+			populationSelect.printObjectivesToFile("NSGA_SEL.txt");
 
+			population = nsgaCone(problem);
+			population.printObjectivesToFile("NSGAPC.txt");
+		}
 	}
 
 	private static void config() {
@@ -82,7 +79,7 @@ public class Main {
 
 		// Algorithm parameters
 		algorithm.setInputParameter("populationSize", 100);
-		algorithm.setInputParameter("maxEvaluations", 3000);
+		algorithm.setInputParameter("maxEvaluations", 10000);
 
 		// Mutation and Crossover for Integer codification
 		parameters = new HashMap();
@@ -124,7 +121,7 @@ public class Main {
 
 		// Algorithm parameters
 		algorithm.setInputParameter("populationSize", 100);
-		algorithm.setInputParameter("maxEvaluations", 3000);
+		algorithm.setInputParameter("maxEvaluations", 10000);
 
 		// Mutation and Crossover for Integer codification
 		parameters = new HashMap();

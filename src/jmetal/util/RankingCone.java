@@ -22,7 +22,6 @@
 package jmetal.util;
 
 import jmetal.core.SolutionSet;
-import jmetal.util.comparators.DominanceComparator;
 import jmetal.util.comparators.OverallConstraintViolationComparator;
 import jmetal.util.comparators.coneComparator;
 
