@@ -48,7 +48,7 @@ import tests.config;
 public class NSGAPC extends Algorithm {
 
 	Prolog engine;
-    SolveInfo info = null;
+	SolveInfo info = null;
 
 	/**
 	 * Constructor
@@ -60,199 +60,315 @@ public class NSGAPC extends Algorithm {
 		super(problem);
 	} // NSGAII
 
-	/**   
-   * Runs the NSGA-II algorithm.
-   * @return a <code>SolutionSet</code> that is a set of non dominated solutions
-   * as a result of the algorithm execution
-   * @throws JMException 
-   */
-  public SolutionSet execute() throws JMException, ClassNotFoundException {
-	
-    int populationSize;
-    int maxEvaluations;
-    int evaluations;
+	/**
+	 * Runs the NSGA-II algorithm.
+	 * 
+	 * @return a <code>SolutionSet</code> that is a set of non dominated solutions
+	 *         as a result of the algorithm execution
+	 * @throws JMException
+	 */
+	public SolutionSet execute() throws JMException, ClassNotFoundException {
 
-    QualityIndicator indicators; // QualityIndicator object
-    int requiredEvaluations; // Use in the example of use of the
-    // indicators object (see below)
+		int populationSize;
+		int maxEvaluations;
+		int evaluations;
 
-    SolutionSet population;
-    SolutionSet offspringPopulation;
-    SolutionSet union;
+		QualityIndicator indicators; // QualityIndicator object
+		int requiredEvaluations; // Use in the example of use of the
+		// indicators object (see below)
 
-    Operator mutationOperator;
-    Operator crossoverOperator;
-    Operator selectionOperator;
+		SolutionSet population;
+		SolutionSet offspringPopulation;
+		SolutionSet union;
 
-    Distance distance = new Distance();
-    
-    
-	engine = new Prolog();
-	try {
-		engine.setTheory(new Theory(new FileInputStream("prolog/programa.pl")));
-	} catch (InvalidTheoryException | IOException e) {
-		e.printStackTrace();
-	}
+		Operator mutationOperator;
+		Operator crossoverOperator;
+		Operator selectionOperator;
 
-    //Read the parameters
-    populationSize = ((Integer) getInputParameter("populationSize")).intValue();
-    maxEvaluations = ((Integer) getInputParameter("maxEvaluations")).intValue();
-    indicators = (QualityIndicator) getInputParameter("indicators");
+		Distance distance = new Distance();
 
-    //Initialize the variables
-    population = new SolutionSet(populationSize);
-    evaluations = 0;
+		engine = new Prolog();
+		try {
+			engine.setTheory(new Theory(new FileInputStream("prolog/programa.pl")));
+		} catch (InvalidTheoryException | IOException e) {
+			e.printStackTrace();
+		}
 
-    requiredEvaluations = 0;
+		// Read the parameters
+		populationSize = ((Integer) getInputParameter("populationSize")).intValue();
+		maxEvaluations = ((Integer) getInputParameter("maxEvaluations")).intValue();
+		indicators = (QualityIndicator) getInputParameter("indicators");
 
-    //Read the operators
-    mutationOperator = operators_.get("mutation");
-    crossoverOperator = operators_.get("crossover");
-    selectionOperator = operators_.get("selection");
+		// Initialize the variables
+		population = new SolutionSet(populationSize);
+		evaluations = 0;
 
-    // Create the initial solutionSet
-    Solution newSolution;
-    
-//    while (evaluations < populationSize) {
-//      newSolution = new Solution(problem_);
-//      problem_.evaluate(newSolution);
-//      problem_.evaluateConstraints(newSolution);
-//	try {
-//		System.out.println(montarString(newSolution));
-//		info = engine.solve(montarString(newSolution));
-//	} catch (MalformedGoalException e) {
-//		e.printStackTrace();
-//	}
-//	System.out.println(info.toString());
-//      if (info.toString().equals("yes.")) {
-//      System.out.println("geracao populcao"+evaluations);
-//      evaluations++;
-//      population.add(newSolution);
-//      }
-//    } //for    
-    
-    //copy 
-//    for (int i = 0; i < populationSize; i++) {
-//    	if (i < config.teste.size()) {
-//            population.add(config.teste.get(i));
-//  	        evaluations++;
-//		}else {
-//		  newSolution = new Solution(problem_);
-//	      problem_.evaluate(newSolution);
-//	      problem_.evaluateConstraints(newSolution);			
-//	      evaluations++;
-//	      population.add(newSolution);			
-//		}
-//
-//	}
+		requiredEvaluations = 0;
 
-    // Create the initial solutionSet
-    for (int i = 0; i < populationSize; i++) {
-      newSolution = new Solution(problem_);
-      problem_.evaluate(newSolution);
-      problem_.evaluateConstraints(newSolution);
-      evaluations++;
-      population.add(newSolution);
-    } //for          
-    
-    
-    int count = 0;
-    
-    // Generations 
-    while (evaluations < maxEvaluations) {
+		// Read the operators
+		mutationOperator = operators_.get("mutation");
+		crossoverOperator = operators_.get("crossover");
+		selectionOperator = operators_.get("selection");
 
-    	count++;
-    	System.out.println("evaluation:::"+evaluations);
-    	
-      // Create the offSpring solutionSet      
-      offspringPopulation = new SolutionSet(populationSize);
-      Solution[] parents = new Solution[2];
-      for (int i = 0; i < (populationSize / 2); i++) {
-        if (evaluations < maxEvaluations) {
-          //obtain parents
-          parents[0] = (Solution) selectionOperator.execute(population);
-          parents[1] = (Solution) selectionOperator.execute(population);
-          Solution[] offSpring = (Solution[]) crossoverOperator.execute(parents);
-          mutationOperator.execute(offSpring[0]);
-          mutationOperator.execute(offSpring[1]);
-          problem_.evaluate(offSpring[0]);
-          problem_.evaluateConstraints(offSpring[0]);
-          problem_.evaluate(offSpring[1]);
-          problem_.evaluateConstraints(offSpring[1]);
-          offspringPopulation.add(offSpring[0]);
-          offspringPopulation.add(offSpring[1]);
-          evaluations += 2;
-        } // if                            
-      } // for
+		// Create the initial solutionSet
+		Solution newSolution;
+		for (int i = 0; i < populationSize; i++) {
+			newSolution = new Solution(problem_);
+			problem_.evaluate(newSolution);
+			problem_.evaluateConstraints(newSolution);
+			evaluations++;
+			population.add(newSolution);
+		} // for
 
-      // Create the solutionSet union of solutionSet and offSpring
-      union = ((SolutionSet) population).union(offspringPopulation);
+		int count = 0;
 
-      // Ranking the union
-      RankingCone ranking = new RankingCone(union);
+		// Generations
+		while (evaluations < maxEvaluations) {
 
-      int remain = populationSize;
-      int index = 0;
-      SolutionSet front = null;
-      population.clear();
+			count++;
+			System.out.println("evaluation NSGAPC:::" + evaluations);
 
-      // Obtain the next front
-      front = ranking.getSubfront(index);
+			// Create the offSpring solutionSet
+			offspringPopulation = new SolutionSet(populationSize);
+			Solution[] parents = new Solution[2];
+			for (int i = 0; i < (populationSize / 2); i++) {
+				if (evaluations < maxEvaluations) {
+					// obtain parents
+					parents[0] = (Solution) selectionOperator.execute(population);
+					parents[1] = (Solution) selectionOperator.execute(population);
+					Solution[] offSpring = (Solution[]) crossoverOperator.execute(parents);
+					mutationOperator.execute(offSpring[0]);
+					mutationOperator.execute(offSpring[1]);
+					problem_.evaluate(offSpring[0]);
+					problem_.evaluateConstraints(offSpring[0]);
+					problem_.evaluate(offSpring[1]);
+					problem_.evaluateConstraints(offSpring[1]);
+					offspringPopulation.add(offSpring[0]);
+					offspringPopulation.add(offSpring[1]);
+					evaluations += 2;
+				} // if
+			} // for
 
-      while ((remain > 0) && (remain >= front.size())) {
-        //Assign crowding distance to individuals
-        distance.crowdingDistanceAssignment(front, problem_.getNumberOfObjectives());
-        //Add the individuals of this front
-        for (int k = 0; k < front.size(); k++) {
-          population.add(front.get(k));
-        } // for
+			// Create the solutionSet union of solutionSet and offSpring
+			union = ((SolutionSet) population).union(offspringPopulation);
 
-        //Decrement remain
-        remain = remain - front.size();
+			// Ranking the union
+			RankingCone ranking = new RankingCone(union);
 
-        //Obtain the next front
-        index++;
-        if (remain > 0) {
-          front = ranking.getSubfront(index);
-        } // if        
-      } // while
+			int remain = populationSize;
+			int index = 0;
+			SolutionSet front = null;
+			population.clear();
 
-      // Remain is less than front(index).size, insert only the best one
-      if (remain > 0) {  // front contains individuals to insert                        
-        distance.crowdingDistanceAssignment(front, problem_.getNumberOfObjectives());
-        front.sort(new CrowdingComparator());
-        for (int k = 0; k < remain; k++) {
-          population.add(front.get(k));
-        } // for
+			// Obtain the next front
+			front = ranking.getSubfront(index);
 
-        remain = 0;
-      } // if                               
+			while ((remain > 0) && (remain >= front.size())) {
+				// Assign crowding distance to individuals
+				distance.crowdingDistanceAssignment(front, problem_.getNumberOfObjectives());
+				// Add the individuals of this front
+				for (int k = 0; k < front.size(); k++) {
+					population.add(front.get(k));
+				} // for
 
-      // This piece of code shows how to use the indicator object into the code
-      // of NSGA-II. In particular, it finds the number of evaluations required
-      // by the algorithm to obtain a Pareto front with a hypervolume higher
-      // than the hypervolume of the true Pareto front.
-      if ((indicators != null) &&
-          (requiredEvaluations == 0)) {
-        double HV = indicators.getHypervolume(population);
-        if (HV >= (0.98 * indicators.getTrueParetoFrontHypervolume())) {
-          requiredEvaluations = evaluations;
-        } // if
-      } // if
-      
-      population.printObjectivesToFile("NSGAPC_G_"+count);
-      
-    } // while
+				// Decrement remain
+				remain = remain - front.size();
 
-    // Return as output parameter the required evaluations
-    setOutputParameter("evaluations", requiredEvaluations);
+				// Obtain the next front
+				index++;
+				if (remain > 0) {
+					front = ranking.getSubfront(index);
+				} // if
+			} // while
 
-    // Return the first non-dominated front
-    RankingCone ranking = new RankingCone(population);
-    //ranking.getSubfront(0).printFeasibleFUN("FUN_NSGAII") ;
+			// Remain is less than front(index).size, insert only the best one
+			if (remain > 0) { // front contains individuals to insert
+				distance.crowdingDistanceAssignment(front, problem_.getNumberOfObjectives());
+				front.sort(new CrowdingComparator());
+				for (int k = 0; k < remain; k++) {
+					population.add(front.get(k));
+				} // for
 
-    return ranking.getSubfront(0);
-  } // execute
+				remain = 0;
+			} // if
+
+			// This piece of code shows how to use the indicator object into the code
+			// of NSGA-II. In particular, it finds the number of evaluations required
+			// by the algorithm to obtain a Pareto front with a hypervolume higher
+			// than the hypervolume of the true Pareto front.
+			if ((indicators != null) && (requiredEvaluations == 0)) {
+				double HV = indicators.getHypervolume(population);
+				if (HV >= (0.98 * indicators.getTrueParetoFrontHypervolume())) {
+					requiredEvaluations = evaluations;
+				} // if
+			} // if
+
+			population.printObjectivesToFile("NSGAPC_G_" + count);
+
+		} // while
+
+		// Return as output parameter the required evaluations
+		setOutputParameter("evaluations", requiredEvaluations);
+
+		// Return the first non-dominated front
+		RankingCone ranking = new RankingCone(population);
+		// ranking.getSubfront(0).printFeasibleFUN("FUN_NSGAII") ;
+
+		return ranking.getSubfront(0);
+	} // execute
+
+	public SolutionSet execute(SolutionSet population) throws JMException, ClassNotFoundException {
+
+		int populationSize;
+		int maxEvaluations;
+		int evaluations;
+
+		QualityIndicator indicators; // QualityIndicator object
+		int requiredEvaluations; // Use in the example of use of the
+		// indicators object (see below)
+
+		SolutionSet offspringPopulation;
+		SolutionSet union;
+
+		Operator mutationOperator;
+		Operator crossoverOperator;
+		Operator selectionOperator;
+
+		Distance distance = new Distance();
+
+		engine = new Prolog();
+		try {
+			engine.setTheory(new Theory(new FileInputStream("prolog/programa.pl")));
+		} catch (InvalidTheoryException | IOException e) {
+			e.printStackTrace();
+		}
+
+		// Read the parameters
+		populationSize = ((Integer) getInputParameter("populationSize")).intValue();
+		maxEvaluations = ((Integer) getInputParameter("maxEvaluations")).intValue();
+		indicators = (QualityIndicator) getInputParameter("indicators");
+
+		// Initialize the variables
+		population = new SolutionSet(populationSize);
+		evaluations = 0;
+
+		requiredEvaluations = 0;
+
+		// Read the operators
+		mutationOperator = operators_.get("mutation");
+		crossoverOperator = operators_.get("crossover");
+		selectionOperator = operators_.get("selection");
+
+		// Create the initial solutionSet
+		Solution newSolution;
+
+		// Create the initial solutionSet
+		while (population.size() < populationSize) {
+			newSolution = new Solution(problem_);
+			problem_.evaluate(newSolution);
+			problem_.evaluateConstraints(newSolution);
+			evaluations++;
+			population.add(newSolution);
+		} // for
+
+		population.printObjectivesToFile("NSGAPC2In.txt");
+		
+		int count = 0;
+
+		// Generations
+		while (evaluations < maxEvaluations) {
+
+			count++;
+			System.out.println("evaluation NSGAPC2:::" + evaluations);
+
+			// Create the offSpring solutionSet
+			offspringPopulation = new SolutionSet(populationSize);
+			Solution[] parents = new Solution[2];
+			for (int i = 0; i < (populationSize / 2); i++) {
+				if (evaluations < maxEvaluations) {
+					// obtain parents
+					parents[0] = (Solution) selectionOperator.execute(population);
+					parents[1] = (Solution) selectionOperator.execute(population);
+					Solution[] offSpring = (Solution[]) crossoverOperator.execute(parents);
+					mutationOperator.execute(offSpring[0]);
+					mutationOperator.execute(offSpring[1]);
+					problem_.evaluate(offSpring[0]);
+					problem_.evaluateConstraints(offSpring[0]);
+					problem_.evaluate(offSpring[1]);
+					problem_.evaluateConstraints(offSpring[1]);
+					offspringPopulation.add(offSpring[0]);
+					offspringPopulation.add(offSpring[1]);
+					evaluations += 2;
+				} // if
+			} // for
+
+			// Create the solutionSet union of solutionSet and offSpring
+			union = ((SolutionSet) population).union(offspringPopulation);
+
+			// Ranking the union
+			RankingCone ranking = new RankingCone(union);
+
+			int remain = populationSize;
+			int index = 0;
+			SolutionSet front = null;
+			population.clear();
+
+			// Obtain the next front
+			front = ranking.getSubfront(index);
+
+			while ((remain > 0) && (remain >= front.size())) {
+				// Assign crowding distance to individuals
+				distance.crowdingDistanceAssignment(front, problem_.getNumberOfObjectives());
+				// Add the individuals of this front
+				for (int k = 0; k < front.size(); k++) {
+					population.add(front.get(k));
+				} // for
+
+				// Decrement remain
+				remain = remain - front.size();
+
+				// Obtain the next front
+				index++;
+				if (remain > 0) {
+					front = ranking.getSubfront(index);
+				} // if
+			} // while
+
+			// Remain is less than front(index).size, insert only the best one
+			if (remain > 0) { // front contains individuals to insert
+				distance.crowdingDistanceAssignment(front, problem_.getNumberOfObjectives());
+				front.sort(new CrowdingComparator());
+				for (int k = 0; k < remain; k++) {
+					population.add(front.get(k));
+				} // for
+
+				remain = 0;
+			} // if
+
+			// This piece of code shows how to use the indicator object into the code
+			// of NSGA-II. In particular, it finds the number of evaluations required
+			// by the algorithm to obtain a Pareto front with a hypervolume higher
+			// than the hypervolume of the true Pareto front.
+			if ((indicators != null) && (requiredEvaluations == 0)) {
+				double HV = indicators.getHypervolume(population);
+				if (HV >= (0.98 * indicators.getTrueParetoFrontHypervolume())) {
+					requiredEvaluations = evaluations;
+				} // if
+			} // if
+
+			population.printObjectivesToFile("NSGAPC2_G_" + count);
+
+		} // while
+
+		// Return as output parameter the required evaluations
+		setOutputParameter("evaluations", requiredEvaluations);
+
+		// Return the first non-dominated front
+		RankingCone ranking = new RankingCone(population);
+		// ranking.getSubfront(0).printFeasibleFUN("FUN_NSGAII") ;
+
+		return ranking.getSubfront(0);
+	} // execute
 
 	static String montarString(Solution solution) {
 		String s;

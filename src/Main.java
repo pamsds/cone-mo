@@ -51,8 +51,12 @@ public class Main {
 			SolutionSet populationSelect = nsgaSelectFront(population);
 			populationSelect.printObjectivesToFile("NSGA_SEL.txt");
 
-			population = nsgaCone(problem);
-			population.printObjectivesToFile("NSGAPC.txt");
+			//population = nsgaCone(problem);
+			//population.printObjectivesToFile("NSGAPC.txt");
+			
+			population = nsgaCone2(problem,population);
+			population.printObjectivesToFile("NSGAPC2.txt");
+			
 		}
 	}
 
@@ -145,6 +149,48 @@ public class Main {
 
 		// Execute the Algorithm
 		SolutionSet population = algorithm.execute();
+
+		return population;
+
+	}
+
+	public static SolutionSet nsgaCone2(Problem problem,SolutionSet initialPopulation) throws IOException, JMException, ClassNotFoundException {
+
+		NSGAPC algorithm; // The algorithm to use
+		Operator crossover; // Crossover operator
+		Operator mutation; // Mutation operator
+		Operator selection; // Selection operator
+		HashMap parameters; // Operator parameters
+		QualityIndicator indicators; // Object to get quality indicators
+
+		algorithm = new NSGAPC(problem);
+
+		// Algorithm parameters
+		algorithm.setInputParameter("populationSize", 100);
+		algorithm.setInputParameter("maxEvaluations", 10000);
+
+		// Mutation and Crossover for Integer codification
+		parameters = new HashMap();
+		parameters.put("probability", 0.9);
+		parameters.put("distributionIndex", 20.0);
+		crossover = CrossoverFactory.getCrossoverOperator("SinglePointCrossover", parameters);
+
+		parameters = new HashMap();
+		parameters.put("probability", 0.05);
+		parameters.put("distributionIndex", 20.0);
+		mutation = MutationFactory.getMutationOperator("BitFlipMutation", parameters);
+
+		// Selection Operator
+		parameters = null;
+		selection = SelectionFactory.getSelectionOperator("BinaryTournament2", parameters);
+
+		// Add the operators to the algorithm
+		algorithm.addOperator("crossover", crossover);
+		algorithm.addOperator("mutation", mutation);
+		algorithm.addOperator("selection", selection);
+
+		// Execute the Algorithm
+		SolutionSet population = algorithm.execute(initialPopulation);
 
 		return population;
 
