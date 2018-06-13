@@ -247,10 +247,7 @@ public class NSGAPC extends Algorithm {
 		populationSize = ((Integer) getInputParameter("populationSize")).intValue();
 		maxEvaluations = ((Integer) getInputParameter("maxEvaluations")).intValue();
 		indicators = (QualityIndicator) getInputParameter("indicators");
-
-		// Initialize the variables
-		population = new SolutionSet(populationSize);
-		evaluations = 0;
+		evaluations = population.size();
 
 		requiredEvaluations = 0;
 
