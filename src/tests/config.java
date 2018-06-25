@@ -17,6 +17,7 @@ public class config {
 	public static int festrela[] = { 800, 0 };
 	public static double[] PreferencesP1 = { 1.0, 0.0 };
 	public static double[] PreferencesP2 = { 0.7, 0.3 };
+	public static boolean selecFront = false; 
 	public static Prolog engine;
 		
 	public static Solution referencePoint(SolutionSet population, double[] solutionPreferences) {

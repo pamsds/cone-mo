@@ -126,8 +126,6 @@ public class NSGAPC extends Algorithm {
 		while (evaluations < maxEvaluations) {
 
 			count++;
-			System.out.println("evaluation NSGAPC:::" + evaluations);
-
 			// Create the offSpring solutionSet
 			offspringPopulation = new SolutionSet(populationSize);
 			Solution[] parents = new Solution[2];
@@ -203,7 +201,9 @@ public class NSGAPC extends Algorithm {
 				} // if
 			} // if
 
+			if(config.selecFront == true) {
 			population.printObjectivesToFile("NSGAPC_G_" + count);
+			}
 
 		} // while
 
@@ -247,7 +247,10 @@ public class NSGAPC extends Algorithm {
 		populationSize = ((Integer) getInputParameter("populationSize")).intValue();
 		maxEvaluations = ((Integer) getInputParameter("maxEvaluations")).intValue();
 		indicators = (QualityIndicator) getInputParameter("indicators");
-		evaluations = population.size();
+
+		// Initialize the variables
+		population = new SolutionSet(populationSize);
+		evaluations = 0;
 
 		requiredEvaluations = 0;
 

@@ -142,7 +142,6 @@ public class MOCell extends Algorithm{
         }
       }                                 
     }    
-    archive.printFeasibleFUN("FUN_MOCell") ;
 
     return archive;
   } // while       

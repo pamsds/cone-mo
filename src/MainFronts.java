@@ -1,4 +1,6 @@
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -21,43 +23,56 @@ import jmetal.problems.ReleasePlanningProblemRaphael;
 import jmetal.qualityIndicator.QualityIndicator;
 import jmetal.util.JMException;
 import tests.config;
+import tests.referenceFront;
 
-public class Main {
+public class MainFronts {
 
 	public static void main(String[] args) throws ClassNotFoundException, IOException, JMException {
 
 		config();
 		Problem problem = new ReleasePlanningProblemRaphael("data-set-1");
-
+		QualityIndicator indicators = new QualityIndicator(problem, "ReferenceFront.txt");
 		SolutionSet population = null;
 
-		for (int i = 0; i < 1; i++) {
-			population = nsgaStandard(problem);
-			population.printObjectivesToFile("NSGA.txt");
+		population = nsgaStandard(problem);
+		population.printObjectivesToFile("NSGA.txt");
 
-			Solution solution = config.referencePoint(population, config.PreferencesP1);
-			Solution solution2 = config.referencePoint(population, config.PreferencesP2);
+		Solution solution = config.referencePoint(population, config.PreferencesP1);
+		Solution solution2 = config.referencePoint(population, config.PreferencesP2);
 
-			SolutionSet seletedPoints = new SolutionSet(2);
-			seletedPoints.add(solution);
-			seletedPoints.add(solution2);
-			seletedPoints.printObjectivesToFile("points.txt");
+		SolutionSet seletedPoints = new SolutionSet(2);
+		seletedPoints.add(solution);
+		seletedPoints.add(solution2);
+		seletedPoints.printObjectivesToFile("points.txt");
 
-			config.min[0] = solution.getObjective(0);
-			config.min[1] = solution2.getObjective(1);
-			config.max[0] = solution2.getObjective(0);
-			config.max[1] = solution.getObjective(1);
+		config.min[0] = solution.getObjective(0);
+		config.min[1] = solution2.getObjective(1);
+		config.max[0] = solution2.getObjective(0);
+		config.max[1] = solution.getObjective(1);
 
-			SolutionSet populationSelect = nsgaSelectFront(population);
-			populationSelect.printObjectivesToFile("NSGA_SEL.txt");
+		SolutionSet populationSelect = nsgaSelectFront(population);
+		populationSelect.printObjectivesToFile("NSGA_SEL.txt");
 
-			//population = nsgaCone(problem);
-			//population.printObjectivesToFile("NSGAPC.txt");
-			
-			population = nsgaCone2(problem,populationSelect);
-			population.printObjectivesToFile("NSGAPC2.txt");
-			
+		population = nsgaCone(problem);
+		population.printObjectivesToFile("NSGAPC.txt");
+
+		population = nsgaCone2(problem, population);
+		population.printObjectivesToFile("NSGAPC2.txt");
+
+	}
+
+	public static void recordMetric(String path, double value) {
+
+		try {
+			BufferedWriter escrever = new BufferedWriter(new FileWriter(path, true));
+			escrever.append(value + "");
+			escrever.newLine();
+			escrever.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+
 	}
 
 	private static void config() {
@@ -154,7 +169,8 @@ public class Main {
 
 	}
 
-	public static SolutionSet nsgaCone2(Problem problem,SolutionSet initialPopulation) throws IOException, JMException, ClassNotFoundException {
+	public static SolutionSet nsgaCone2(Problem problem, SolutionSet initialPopulation)
+			throws IOException, JMException, ClassNotFoundException {
 
 		NSGAPC algorithm; // The algorithm to use
 		Operator crossover; // Crossover operator
@@ -213,9 +229,6 @@ public class Main {
 
 			try {
 				SolveInfo info = engine.solve(montarString(solution));
-				// System.out.println(montarString(solution));
-				// System.out.println(info.toString().equals("yes."));
-
 				if (info.toString().equals("yes.")) {
 					SelPopulation.add(solution);
 				}
