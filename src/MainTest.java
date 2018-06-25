@@ -52,15 +52,10 @@ public class MainTest {
 			config.max[1] = solution.getObjective(1);
 
 			SolutionSet populationSelect = nsgaSelectFront(population);
-			populationSelect.printObjectivesToFile("NSGA_SEL.txt");
 			recordMetric("metrics/GD_nsga.txt", indicators.getGD(population));
-
 			population = nsgaCone(problem);
-			population.printObjectivesToFile("NSGAPC.txt");
 			recordMetric("metrics/GD_cone.txt", indicators.getGD(population));
-			
 			population = nsgaCone2(problem,population);
-			population.printObjectivesToFile("NSGAPC2.txt");
 			recordMetric("metrics/GD_cone2.txt", indicators.getGD(population));
 			
 			
