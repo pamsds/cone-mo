@@ -56,7 +56,7 @@ public class MainFronts {
 		population = nsgaCone(problem);
 		population.printObjectivesToFile("NSGAPC.txt");
 
-		population = nsgaCone2(problem, population);
+		population = nsgaCone2(problem, populationSelect);
 		population.printObjectivesToFile("NSGAPC2.txt");
 
 	}

@@ -44,7 +44,6 @@ public class MainTest {
 			SolutionSet seletedPoints = new SolutionSet(2);
 			seletedPoints.add(solution);
 			seletedPoints.add(solution2);
-			seletedPoints.printObjectivesToFile("points.txt");
 
 			config.min[0] = solution.getObjective(0);
 			config.min[1] = solution2.getObjective(1);
@@ -52,10 +51,13 @@ public class MainTest {
 			config.max[1] = solution.getObjective(1);
 
 			SolutionSet populationSelect = nsgaSelectFront(population);
-			recordMetric("metrics/GD_nsga.txt", indicators.getGD(population));
-			population = nsgaCone(problem);
-			recordMetric("metrics/GD_cone.txt", indicators.getGD(population));
-			population = nsgaCone2(problem,population);
+//			recordMetric("metrics/GD_nsga.txt", indicators.getGD(population));
+			
+			
+//			population = nsgaCone(problem);
+//			recordMetric("metrics/GD_cone.txt", indicators.getGD(population));
+		
+			population = nsgaCone2(problem,populationSelect);
 			recordMetric("metrics/GD_cone2.txt", indicators.getGD(population));
 			
 			
