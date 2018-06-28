@@ -113,4 +113,15 @@ public class QualityIndicator {
                                  trueParetoFront_.writeObjectivesToMatrix(),
                                  problem_.getNumberOfObjectives());
   } // getEpsilon
+  
+  
+  public double getSpacing(SolutionSet solutionSet) {
+	    return new Spacing().spacing(solutionSet.writeObjectivesToMatrix(),
+	                                 trueParetoFront_.writeObjectivesToMatrix(),
+	                                 problem_.getNumberOfObjectives());
+   
+  } // getSpacing
+  
+  
+  
 } // QualityIndicator
