@@ -50,15 +50,15 @@ public class MainTestGD {
 			config.max[0] = solution2.getObjective(0);
 			config.max[1] = solution.getObjective(1);
 
-//			SolutionSet populationSelect = nsgaSelectFront(population);
+			SolutionSet populationSelect = nsgaSelectFront(population);
 //			recordMetric("metrics/GD_nsga.txt", indicators.getGD(populationSelect));
 			
 			
-			population = nsgaCone(problem);
-			recordMetric("metrics/GD_cone.txt", indicators.getGD(population));
+//			population = nsgaCone(problem);
+//			recordMetric("metrics/GD_cone.txt", indicators.getGD(population));
 		
-//			population = nsgaCone2(problem,populationSelect);
-//			recordMetric("metrics/GD_cone2.txt", indicators.getGD(population));
+			population = nsgaCone2(problem,populationSelect);
+			recordMetric("metrics/GD_cone2.txt", indicators.getGD(population));
 			
 			
 		}

@@ -30,10 +30,10 @@ public class MainTestSPAC {
 
 		config();
 		Problem problem = new ReleasePlanningProblemRaphael("data-set-1");
-		QualityIndicator indicators = new QualityIndicator(problem, "ReferenceFront.txt");
+		QualityIndicator indicators = new QualityIndicator(problem, "ReferenceFrontMOD.txt");
 		SolutionSet population = null;
 
-		for (int i = 0; i < 30; i++) {
+		for (int i = 0; i < 1; i++) {
 			
 			System.out.println("EXEC::: "+i);
 			population = nsgaStandard(problem);
@@ -52,8 +52,8 @@ public class MainTestSPAC {
 			SolutionSet populationSelect = nsgaSelectFront(population);
 			recordMetric("metrics/SPACING_nsga.txt", indicators.getSpacing(populationSelect));
 			
-//			population = nsgaCone(problem);
-//			recordMetric("metrics/SPACING_cone.txt", indicators.getSpacing(population));
+			population = nsgaCone(problem);
+			recordMetric("metrics/SPACING_cone.txt", indicators.getSpacing(population));
 		
 //			population = nsgaCone2(problem,populationSelect);
 //			recordMetric("metrics/SPREAD_cone2.txt", indicators.getSpacing(population));

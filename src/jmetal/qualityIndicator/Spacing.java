@@ -91,12 +91,22 @@ public class Spacing {
     } // for
 
     mean = mean / (double)(numberOfPoints - 1);
+    
+    
+    double value = 0.0;
+    
+    for (int i = 0; i < (normalizedFront.length-1); i++) {
+        value += Math.abs(utils_.distance(normalizedFront[i],normalizedFront[i+1]) - mean);
+      } // for
+
+    
+    value = value / (double)(numberOfPoints - 1);
 
     // STEP 6. If there are more than a single point, continue computing the 
     // metric. In other case, return the worse value (1.0, see metric's 
     // description).
     if (numberOfPoints > 1) {
-      return mean;
+      return value;
     } 
     else 
     	return 1.0;
@@ -128,4 +138,4 @@ public class Spacing {
 
 	System.out.println(value);  
   } // Main
-} // Spread
+} // Spacing
