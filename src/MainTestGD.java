@@ -25,7 +25,7 @@ import jmetal.util.JMException;
 import tests.config;
 import tests.referenceFront;
 
-public class MainTest {
+public class MainTestGD {
 
 	public static void main(String[] args) throws ClassNotFoundException, IOException, JMException {
 
@@ -50,15 +50,15 @@ public class MainTest {
 			config.max[0] = solution2.getObjective(0);
 			config.max[1] = solution.getObjective(1);
 
-			SolutionSet populationSelect = nsgaSelectFront(population);
-//			recordMetric("metrics/GD_nsga.txt", indicators.getGD(population));
+//			SolutionSet populationSelect = nsgaSelectFront(population);
+//			recordMetric("metrics/GD_nsga.txt", indicators.getGD(populationSelect));
 			
 			
-//			population = nsgaCone(problem);
-//			recordMetric("metrics/GD_cone.txt", indicators.getGD(population));
+			population = nsgaCone(problem);
+			recordMetric("metrics/GD_cone.txt", indicators.getGD(population));
 		
-			population = nsgaCone2(problem,populationSelect);
-			recordMetric("metrics/GD_cone2.txt", indicators.getGD(population));
+//			population = nsgaCone2(problem,populationSelect);
+//			recordMetric("metrics/GD_cone2.txt", indicators.getGD(population));
 			
 			
 		}
